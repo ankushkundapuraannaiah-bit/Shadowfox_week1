@@ -1,0 +1,30 @@
+Title: Cellular Respiration and ATP Synthase Mechanisms
+
+Lecture Overview:
+Cellular respiration is the fundamental biochemical pathway through which eukaryotic cells break down glucose to generate adenosine triphosphate (ATP). The overall chemical equation is:
+C6H12O6 + 6O2 -> 6CO2 + 6H2O + ~30-32 ATP.
+
+Key Stages:
+1. Glycolysis:
+   - Occurs in the cytoplasm (cytosol).
+   - Anaerobic process (does not require O2).
+   - One glucose molecule (6 carbons) is phosphorylated and cleaved into 2 molecules of pyruvate (3 carbons each).
+   - Net energy yield: 2 ATP (via substrate-level phosphorylation) and 2 NADH.
+   - Rate-limiting enzyme: Phosphofructokinase-1 (PFK-1), allosterically inhibited by high ATP and citrate, activated by AMP.
+
+2. Pyruvate Oxidation (Link Reaction):
+   - Pyruvate is actively transported into the mitochondrial matrix.
+   - Pyruvate dehydrogenase complex catalyzes decarboxylation: pyruvate -> Acetyl-CoA + CO2 + NADH.
+
+3. Krebs Cycle (Citric Acid Cycle / TCA Cycle):
+   - Located in the mitochondrial matrix.
+   - Acetyl-CoA (2C) combines with oxaloacetate (4C) to form citrate (6C).
+   - Per glucose molecule (two turns of the cycle): yields 6 NADH, 2 FADH2, 2 GTP/ATP, and 4 CO2.
+
+4. Oxidative Phosphorylation & The Electron Transport Chain (ETC):
+   - Located along the inner mitochondrial membrane (cristae).
+   - Complexes I, II, III, and IV pump protons (H+) from the matrix into the intermembrane space.
+   - Creates a steep electrochemical proton gradient (proton-motive force).
+   - Oxygen (O2) acts as the terminal electron acceptor, reduced to H2O via Complex IV (Cytochrome c oxidase).
+   - ATP Synthase (F0F1 complex): Protons flow down their electrochemical gradient through the F0 rotor subunit, driving the rotary catalysis of F1 to synthesize ATP from ADP and inorganic phosphate (chemiosmosis).
+   - Inhibitors & Uncouplers: Cyanide and Carbon Monoxide inhibit Complex IV. DNP (2,4-dinitrophenol) uncouples the proton gradient from ATP synthesis, releasing energy as heat.

@@ -1,0 +1,25 @@
+Title: Macroeconomics: Inflation Dynamics, Monetary Policy, and the Phillips Curve
+
+1. Definition and Measurement of Inflation:
+   - Inflation is defined as a sustained increase in the aggregate price level of goods and services in an economy over time, eroding the purchasing power of currency.
+   - Primary Indexes:
+     * Consumer Price Index (CPI): Measures price changes from the perspective of retail consumers based on a fixed representative basket. Subject to substitution bias.
+     * Personal Consumption Expenditures (PCE): The Federal Reserve's preferred measure; uses a chained index that adjusts dynamically for consumer substitution.
+     * GDP Deflator: Broader index reflecting domestic production rather than household consumption.
+
+2. Primary Causal Theories of Inflation:
+   - Demand-Pull Inflation: Occurs when aggregate demand (AD) outpaces aggregate supply (AS) at full employment capacity ("too many dollars chasing too few goods"). Often triggered by fiscal stimulus or loose credit.
+   - Cost-Push Inflation: Initiated by negative aggregate supply shocks that increase production costs (e.g., crude oil embargoes, geopolitical supply chain disruptions). Often leads to Stagflation (stagnant growth + high inflation + rising unemployment).
+   - Monetary Theory (Quantity Theory of Money):
+     * Equation of Exchange: M * V = P * Y (where M = Money Supply, V = Velocity of Money, P = Price Level, Y = Real Output).
+     * Milton Friedman's postulate: In the long run, V and Y are determined by real structural factors, meaning sustained inflation is always and everywhere a monetary phenomenon driven by excess money supply growth.
+
+3. The Phillips Curve and Expectations:
+   - Original Phillips Curve (Short-Run): Hypothesized a stable inverse trade-off between nominal wage inflation and unemployment.
+   - Expectations-Augmented Phillips Curve (Friedman & Phelps):
+     * Natural Rate of Unemployment (NAIRU): In the long run, the Phillips Curve is vertical at the natural rate.
+     * Rational Expectations Hypothesis: Any predictable expansionary monetary policy merely raises inflation expectations (pi_e) without reducing unemployment, shifting the short-run curve upward.
+
+4. Central Banking and Monetary Transmission Mechanism:
+   - Modern central banks utilize interest rate targeting (e.g., the Taylor Rule) rather than monetary targeting.
+   - Contractionary Monetary Policy: Increasing the policy rate -> drives up bond yields and borrowing costs -> dampens capital investment (I) and interest-sensitive consumption (C) -> contracts aggregate demand to anchor inflation expectations back toward target (typically 2%).

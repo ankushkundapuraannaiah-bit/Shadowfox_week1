@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CogniStudy AI — Intelligent Academic Utility Suite</title>
+  <!-- Modern Google Fonts: Inter and JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Marked.js for clean markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    
+    <!-- Top Header Navigation -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <i data-lucide="graduation-cap"></i>
+        </div>
+        <div>
+          <h1 class="brand-title">CogniStudy <span class="badge-ai">AI</span></h1>
+          <p class="brand-subtitle">Intelligent Student Academic Utility Suite</p>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Sample Notes Quick-Loader -->
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-btn" id="sampleNotesDropdownBtn">
+            <i data-lucide="file-text"></i>
+            <span>Load Sample Notes</span>
+            <i data-lucide="chevron-down" class="icon-small"></i>
+          </button>
+          <div class="dropdown-menu" id="sampleNotesMenu">
+            <button class="dropdown-item" data-sample="biology">
+              <i data-lucide="dna"></i>
+              <div>
+                <strong>Biology: Cellular Respiration</strong>
+                <small>ATP Synthase, Krebs Cycle, ETC</small>
+              </div>
+            </button>
+            <button class="dropdown-item" data-sample="cs">
+              <i data-lucide="cpu"></i>
+              <div>
+                <strong>CS: Operating Systems</strong>
+                <small>Concurrency, Deadlocks, Paging</small>
+              </div>
+            </button>
+            <button class="dropdown-item" data-sample="econ">
+              <i data-lucide="trending-up"></i>
+              <div>
+                <strong>Economics: Inflation Dynamics</strong>
+                <small>Phillips Curve, Money Supply, PCE</small>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode Indicator Badge -->
+        <div class="mode-pill" id="modePill" title="Click to view API Key settings">
+          <span class="status-dot dot-active"></span>
+          <span id="modeText">Checking Status...</span>
+        </div>
+
+        <!-- API Key Settings Button -->
+        <button class="btn btn-outline" id="openApiKeyModalBtn" title="Configure API Key">
+          <i data-lucide="key"></i>
+          <span>API Key</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Notice Banner (for simulation / alerts) -->
+    <div id="globalBanner" class="banner hidden">
+      <div class="banner-content">
+        <i data-lucide="info" class="banner-icon"></i>
+        <span id="bannerMessage">Notice message here</span>
+      </div>
+      <button class="banner-close" id="closeBannerBtn">&times;</button>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="tools-tab-bar">
+      <button class="tab-btn active" data-tab="cornell">
+        <i data-lucide="notebook-pen"></i>
+        <span>Cornell Synthesizer</span>
+      </button>
+      <button class="tab-btn" data-tab="quiz">
+        <i data-lucide="brain-circuit"></i>
+        <span>Active Recall Quiz</span>
+      </button>
+      <button class="tab-btn" data-tab="polish">
+        <i data-lucide="award"></i>
+        <span>Answer Polisher</span>
+      </button>
+      <button class="tab-btn" data-tab="explain">
+        <i data-lucide="sparkles"></i>
+        <span>Feynman Explainer</span>
+      </button>
+    </nav>
+
+    <!-- Workspace Container -->
+    <main class="workspace">
+
+      <!-- ======================================================== -->
+      <!-- TAB 1: CORNELL NOTES SYNTHESIZER -->
+      <!-- ======================================================== -->
+      <section class="tab-pane active" id="pane-cornell">
+        <div class="grid-split">
+          <!-- Input Card -->
+          <div class="card input-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="file-input"></i>
+                <h2>Lecture / Study Notes Input</h2>
+              </div>
+              <button class="btn-text" id="clearCornellBtn"><i data-lucide="trash-2"></i> Clear</button>
+            </div>
+
+            <div class="card-body">
+              <div class="form-group">
+                <label for="cornellInput">Paste lecture transcripts, textbook passages, or raw notes:</label>
+                <textarea id="cornellInput" rows="12" placeholder="Paste your study materials here (minimum 15 characters)..." class="text-editor"></textarea>
+                <div class="input-meta">
+                  <span id="cornellWordCount">0 words · 0 chars</span>
+                  <span class="hint-text">Cornell framework creates cues, summary, and self-test questions</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="cornellStyle">Synthesizer Style:</label>
+                  <select id="cornellStyle" class="form-select">
+                    <option value="cornell" selected>Classic Cornell Notes</option>
+                    <option value="bullet">High-Yield Bullet Synthesis</option>
+                    <option value="executive">Executive Revision Brief</option>
+                    <option value="exam_cues">Exam-Cram Focus & Cues</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label for="cornellFocus">Focus Topic (Optional):</label>
+                  <input type="text" id="cornellFocus" class="form-input" placeholder="e.g., Rate-limiting enzymes, Deadlock avoidance">
+                </div>
+              </div>
+
+              <div class="validation-error hidden" id="cornellValidationError"></div>
+
+              <button class="btn btn-primary btn-block" id="generateCornellBtn">
+                <i data-lucide="wand-2"></i>
+                <span>Synthesize Cornell Notes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Card -->
+          <div class="card output-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="sparkles"></i>
+                <h2>Structured Cornell Synthesis</h2>
+              </div>
+              <div class="output-actions">
+                <button class="btn btn-sm btn-outline" id="copyCornellBtn" title="Copy as Markdown">
+                  <i data-lucide="copy"></i> Copy
+                </button>
+                <button class="btn btn-sm btn-outline" id="downloadCornellBtn" title="Download Markdown">
+                  <i data-lucide="download"></i> Export
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body scrollable" id="cornellOutputContainer">
+              <!-- Placeholder State -->
+              <div class="empty-state" id="cornellEmptyState">
+                <div class="empty-icon"><i data-lucide="book-open"></i></div>
+                <h3>Ready to Synthesize Your Notes</h3>
+                <p>Paste your study materials on the left and click <strong>Synthesize Cornell Notes</strong>, or click <strong>Load Sample Notes</strong> above.</p>
+              </div>
+
+              <!-- Loading State -->
+              <div class="loading-state hidden" id="cornellLoadingState">
+                <div class="spinner"></div>
+                <h3>Synthesizing Academic Knowledge...</h3>
+                <p>Extracting high-yield cues, generating active-recall questions, and structuring content.</p>
+              </div>
+
+              <!-- Result State (Cornell 2-Column Format) -->
+              <div class="cornell-result hidden" id="cornellResultView">
+                <div class="cornell-header-banner">
+                  <h3 id="cornellTitle">Topic Title</h3>
+                  <span class="badge" id="cornellStyleBadge">Cornell Notes</span>
+                </div>
+
+                <!-- 2-Column Cornell Grid: Left = Cues / Right = Notes Summary -->
+                <div class="cornell-layout-grid">
+                  <div class="cornell-column-cues">
+                    <h4><i data-lucide="key"></i> Recall Cues & Keywords</h4>
+                    <ul id="cornellCuesList" class="cues-list"></ul>
+                  </div>
+
+                  <div class="cornell-column-notes">
+                    <h4><i data-lucide="align-left"></i> Synthesized Notes</h4>
+                    <div id="cornellNotesContent" class="markdown-body"></div>
+                  </div>
+                </div>
+
+                <!-- Core Takeaways -->
+                <div class="cornell-takeaways-card">
+                  <h4><i data-lucide="check-circle-2"></i> High-Yield Core Takeaways</h4>
+                  <ul id="cornellTakeawaysList" class="takeaways-list"></ul>
+                </div>
+
+                <!-- Study Questions & Action Items -->
+                <div class="cornell-footer-grid">
+                  <div class="study-questions-box">
+                    <h4><i data-lucide="help-circle"></i> Active-Recall Study Questions</h4>
+                    <ul id="cornellQuestionsList" class="questions-list"></ul>
+                  </div>
+                  <div class="action-items-box">
+                    <h4><i data-lucide="list-todo"></i> Next Study Actions</h4>
+                    <ul id="cornellActionsList" class="actions-list"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 2: ACTIVE RECALL QUIZ & FLASHCARDS -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="pane-quiz">
+        <div class="grid-split">
+          <!-- Input Card -->
+          <div class="card input-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="brain"></i>
+                <h2>Quiz Generator Input</h2>
+              </div>
+              <button class="btn-text" id="clearQuizBtn"><i data-lucide="trash-2"></i> Clear</button>
+            </div>
+
+            <div class="card-body">
+              <div class="form-group">
+                <label for="quizInput">Source Study Notes / Excerpt:</label>
+                <textarea id="quizInput" rows="10" placeholder="Paste notes from which to construct testing questions..." class="text-editor"></textarea>
+                <div class="input-meta">
+                  <span id="quizWordCount">0 words · 0 chars</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="quizCount">Number of Questions:</label>
+                  <select id="quizCount" class="form-select">
+                    <option value="3">3 Questions</option>
+                    <option value="4" selected>4 Questions (Recommended)</option>
+                    <option value="6">6 Questions</option>
+                    <option value="8">8 Questions</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label for="quizDifficulty">Difficulty:</label>
+                  <select id="quizDifficulty" class="form-select">
+                    <option value="easy">Foundational (Easy)</option>
+                    <option value="medium" selected>Exam Standard (Medium)</option>
+                    <option value="hard">Mastery / Tricky (Hard)</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label for="quizType">Format:</label>
+                  <select id="quizType" class="form-select">
+                    <option value="mixed" selected>Mixed (MCQ + Flashcards)</option>
+                    <option value="mcq">Multiple Choice Only</option>
+                    <option value="flashcard">Flashcards Only</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="validation-error hidden" id="quizValidationError"></div>
+
+              <button class="btn btn-primary btn-block" id="generateQuizBtn">
+                <i data-lucide="help-circle"></i>
+                <span>Generate Active Recall Quiz</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Card: Interactive Quiz Runner -->
+          <div class="card output-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="check-square"></i>
+                <h2>Interactive Self-Assessment</h2>
+              </div>
+              <div class="quiz-score-badge hidden" id="quizLiveScoreBadge">
+                Score: <span id="quizScoreCount">0</span>/<span id="quizTotalCount">0</span>
+              </div>
+            </div>
+
+            <div class="card-body scrollable" id="quizOutputContainer">
+              <!-- Empty State -->
+              <div class="empty-state" id="quizEmptyState">
+                <div class="empty-icon"><i data-lucide="lightbulb"></i></div>
+                <h3>Active Recall Assessment</h3>
+                <p>Generate questions to test your conceptual mastery. Test yourself actively instead of passively re-reading!</p>
+              </div>
+
+              <!-- Loading State -->
+              <div class="loading-state hidden" id="quizLoadingState">
+                <div class="spinner"></div>
+                <h3>Formulating Assessment Items...</h3>
+                <p>Designing challenging questions and pedagogical explanations.</p>
+              </div>
+
+              <!-- Interactive Quiz Runner -->
+              <div class="quiz-runner hidden" id="quizRunnerView">
+                <div class="quiz-runner-header">
+                  <div>
+                    <h3 id="quizTitle">Mastery Assessment</h3>
+                    <div class="quiz-tags">
+                      <span class="badge" id="quizDifficultyBadge">Medium</span>
+                      <span class="badge badge-muted" id="quizQuestionsCountBadge">4 Items</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-sm btn-outline" id="resetQuizBtn">
+                    <i data-lucide="rotate-ccw"></i> Retake Quiz
+                  </button>
+                </div>
+
+                <!-- Questions List Container -->
+                <div id="quizQuestionsList" class="questions-stack"></div>
+
+                <!-- Quiz Completion Banner -->
+                <div class="quiz-complete-card hidden" id="quizCompleteCard">
+                  <div class="complete-icon"><i data-lucide="trophy"></i></div>
+                  <h3 id="quizFinalMessage">Quiz Completed!</h3>
+                  <p id="quizFinalScoreText">You answered 4 out of 4 questions correctly.</p>
+                  <button class="btn btn-primary" id="retakeBottomBtn">Try Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 3: ACADEMIC ANSWER POLISHER & RUBRIC GRADER -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="pane-polish">
+        <div class="grid-split">
+          <!-- Input Card -->
+          <div class="card input-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="edit-3"></i>
+                <h2>Draft Answer & Assignment Prompt</h2>
+              </div>
+              <button class="btn-text" id="clearPolishBtn"><i data-lucide="trash-2"></i> Clear</button>
+            </div>
+
+            <div class="card-body">
+              <div class="form-group">
+                <label for="polishQuestion">Exam / Assignment Question:</label>
+                <input type="text" id="polishQuestion" class="form-input" placeholder="e.g., Explain the role of ATP Synthase in cellular respiration.">
+              </div>
+
+              <div class="form-group">
+                <label for="polishDraft">Your Draft Answer:</label>
+                <textarea id="polishDraft" rows="8" placeholder="Type or paste your rough student answer here..." class="text-editor"></textarea>
+                <div class="input-meta">
+                  <span id="polishWordCount">0 words · 0 chars</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="polishLevel">Target Academic Standard:</label>
+                <select id="polishLevel" class="form-select">
+                  <option value="high_school">High School (Clear, structured, foundational)</option>
+                  <option value="undergraduate" selected>Undergraduate (Rigorous, evidence-based, formal)</option>
+                  <option value="postgraduate">Postgraduate (Exemplary, publication-grade, nuanced)</option>
+                </select>
+              </div>
+
+              <div class="validation-error hidden" id="polishValidationError"></div>
+
+              <button class="btn btn-primary btn-block" id="generatePolishBtn">
+                <i data-lucide="shield-check"></i>
+                <span>Evaluate & Polish Answer</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Card -->
+          <div class="card output-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="award"></i>
+                <h2>Rubric Evaluation & Upgrade</h2>
+              </div>
+              <button class="btn btn-sm btn-outline" id="copyPolishedBtn" title="Copy Polished Answer">
+                <i data-lucide="copy"></i> Copy Model Answer
+              </button>
+            </div>
+
+            <div class="card-body scrollable" id="polishOutputContainer">
+              <!-- Empty State -->
+              <div class="empty-state" id="polishEmptyState">
+                <div class="empty-icon"><i data-lucide="file-check"></i></div>
+                <h3>Academic Rubric Feedback</h3>
+                <p>Submit a draft answer along with the exam question. The AI evaluator will score your answer, diagnose blind spots, and write an improved model version.</p>
+              </div>
+
+              <!-- Loading State -->
+              <div class="loading-state hidden" id="polishLoadingState">
+                <div class="spinner"></div>
+                <h3>Grading Against Academic Rubric...</h3>
+                <p>Assessing conceptual accuracy, structure, terminology, and evidence.</p>
+              </div>
+
+              <!-- Result View -->
+              <div class="polish-result hidden" id="polishResultView">
+                <!-- Score Card -->
+                <div class="score-banner">
+                  <div class="score-circle">
+                    <span class="score-number" id="polishScoreNum">7</span>
+                    <span class="score-total">/10</span>
+                  </div>
+                  <div class="score-details">
+                    <h4>Draft Diagnostic Score</h4>
+                    <p id="polishScoreSummary">Solid conceptual foundation with room for greater academic rigor.</p>
+                  </div>
+                </div>
+
+                <!-- Rubric Breakdown -->
+                <div class="rubric-grid" id="polishRubricGrid">
+                  <div class="rubric-card">
+                    <h5><i data-lucide="check"></i> Accuracy & Depth</h5>
+                    <p id="rubricAccuracy">Feedback</p>
+                  </div>
+                  <div class="rubric-card">
+                    <h5><i data-lucide="git-merge"></i> Structure & Flow</h5>
+                    <p id="rubricStructure">Feedback</p>
+                  </div>
+                  <div class="rubric-card">
+                    <h5><i data-lucide="type"></i> Academic Register</h5>
+                    <p id="rubricTone">Feedback</p>
+                  </div>
+                  <div class="rubric-card">
+                    <h5><i data-lucide="help-circle"></i> Evidence & Logic</h5>
+                    <p id="rubricEvidence">Feedback</p>
+                  </div>
+                </div>
+
+                <!-- Strengths and Weaknesses -->
+                <div class="feedback-columns">
+                  <div class="strengths-box">
+                    <h5><i data-lucide="thumbs-up"></i> Identified Strengths</h5>
+                    <ul id="polishStrengthsList"></ul>
+                  </div>
+                  <div class="weaknesses-box">
+                    <h5><i data-lucide="alert-triangle"></i> Areas for Improvement</h5>
+                    <ul id="polishWeaknessesList"></ul>
+                  </div>
+                </div>
+
+                <!-- Polished Model Answer -->
+                <div class="polished-answer-box">
+                  <div class="box-header">
+                    <h4><i data-lucide="sparkles"></i> Polished Model Answer</h4>
+                    <span class="badge badge-success">High-Scoring Revision</span>
+                  </div>
+                  <div class="polished-content" id="polishModelText"></div>
+                </div>
+
+                <!-- Improvements Made -->
+                <div class="improvements-box">
+                  <h5><i data-lucide="arrow-up-right"></i> Key Modifications Made</h5>
+                  <ul id="polishImprovementsList"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- TAB 4: FEYNMAN CONCEPT EXPLAINER -->
+      <!-- ======================================================== -->
+      <section class="tab-pane" id="pane-explain">
+        <div class="grid-split">
+          <!-- Input Card -->
+          <div class="card input-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="lightbulb"></i>
+                <h2>Concept Query & Abstraction Level</h2>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="form-group">
+                <label for="explainConcept">Concept / Theorem / Mechanism:</label>
+                <input type="text" id="explainConcept" class="form-input" placeholder="e.g., Backpropagation, Deadlocks, Chemiosmosis, Comparative Advantage">
+              </div>
+
+              <div class="form-group">
+                <label for="explainDomain">Discipline / Subject (Optional):</label>
+                <input type="text" id="explainDomain" class="form-input" placeholder="e.g., Computer Science, Biochemistry, Economics">
+              </div>
+
+              <div class="form-group">
+                <label>Cognitive Depth Level (Feynman Technique):</label>
+                <div class="radio-pill-group">
+                  <label class="radio-pill">
+                    <input type="radio" name="cognitiveLevel" value="eli5">
+                    <span>
+                      <strong>👶 ELI5 Metaphor</strong>
+                      <small>Intuitive, zero-jargon everyday analogy</small>
+                    </span>
+                  </label>
+                  <label class="radio-pill active">
+                    <input type="radio" name="cognitiveLevel" value="high_yield_exam" checked>
+                    <span>
+                      <strong>🎯 Exam High-Yield</strong>
+                      <small>Core mechanisms, definitions, exam prep</small>
+                    </span>
+                  </label>
+                  <label class="radio-pill">
+                    <input type="radio" name="cognitiveLevel" value="deep_dive">
+                    <span>
+                      <strong>🔬 Deep Dive / Rigorous</strong>
+                      <small>First-principles, undergraduate mathematical depth</small>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="validation-error hidden" id="explainValidationError"></div>
+
+              <button class="btn btn-primary btn-block" id="generateExplainBtn">
+                <i data-lucide="sparkles"></i>
+                <span>Explain Concept</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Card -->
+          <div class="card output-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <i data-lucide="book-open-check"></i>
+                <h2>Multi-Tier Conceptual Mastery</h2>
+              </div>
+              <button class="btn btn-sm btn-outline" id="copyExplainBtn" title="Copy Explanation">
+                <i data-lucide="copy"></i> Copy
+              </button>
+            </div>
+
+            <div class="card-body scrollable" id="explainOutputContainer">
+              <!-- Empty State -->
+              <div class="empty-state" id="explainEmptyState">
+                <div class="empty-icon"><i data-lucide="sparkles"></i></div>
+                <h3>The Feynman Technique in Action</h3>
+                <p>Enter any difficult academic topic and choose your cognitive depth level to demystify complex ideas effortlessly.</p>
+              </div>
+
+              <!-- Loading State -->
+              <div class="loading-state hidden" id="explainLoadingState">
+                <div class="spinner"></div>
+                <h3>Distilling Concept...</h3>
+                <p>Synthesizing intuitive analogies, identifying misconceptions, and constructing memory mnemonics.</p>
+              </div>
+
+              <!-- Result View -->
+              <div class="explain-result hidden" id="explainResultView">
+                <div class="concept-hero">
+                  <h3 id="explainConceptTitle">Concept Name</h3>
+                  <span class="badge" id="explainLevelBadge">Exam High-Yield</span>
+                </div>
+
+                <!-- Intuitive Analogy Callout -->
+                <div class="analogy-card">
+                  <div class="analogy-header">
+                    <i data-lucide="lightbulb" class="analogy-icon"></i>
+                    <strong>Intuitive Mental Model / Analogy</strong>
+                  </div>
+                  <p id="explainAnalogyText">Analogy goes here...</p>
+                </div>
+
+                <!-- Core Explanation -->
+                <div class="core-explanation-card">
+                  <h4><i data-lucide="align-left"></i> Fundamental Mechanism</h4>
+                  <div id="explainCoreContent" class="markdown-body"></div>
+                </div>
+
+                <!-- Misconceptions & Mnemonics -->
+                <div class="explain-dual-grid">
+                  <div class="misconceptions-card">
+                    <h5><i data-lucide="alert-circle"></i> Common Student Misconceptions</h5>
+                    <ul id="explainMisconceptionsList"></ul>
+                  </div>
+                  <div class="mnemonic-card">
+                    <h5><i data-lucide="zap"></i> Memory Hook / Mnemonic</h5>
+                    <div class="mnemonic-badge" id="explainMnemonicText"></div>
+                  </div>
+                </div>
+
+                <!-- Self-Test Challenge -->
+                <div class="challenge-card">
+                  <div class="challenge-header">
+                    <i data-lucide="help-circle"></i>
+                    <strong>Self-Test Understanding Check</strong>
+                  </div>
+                  <p id="explainChallengeText">Challenge question...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- API Key Configuration Modal -->
+    <div class="modal-backdrop hidden" id="apiKeyModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <i data-lucide="key"></i>
+            <h3>API Key & Provider Settings</h3>
+          </div>
+          <button class="modal-close" id="closeApiKeyModalBtn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">
+            CogniStudy AI is powered by <strong>Google Gemini API</strong>. You can configure your key below or run seamlessly in <strong>Intelligent Offline Simulation Mode</strong>.
+          </p>
+          <div class="form-group">
+            <label for="modalApiKeyInput">Google Gemini API Key:</label>
+            <input type="password" id="modalApiKeyInput" class="form-input" placeholder="AIzaSy...">
+            <small class="form-hint">Get a free key from <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a>. Keys are stored only in your local browser session.</small>
+          </div>
+          <div class="modal-status-box" id="modalKeyStatusBox">
+            <i data-lucide="info"></i>
+            <span id="modalKeyStatusText">No key configured. Currently operating in Offline Simulation Mode.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="clearApiKeyBtn">Reset to Simulation</button>
+          <button class="btn btn-primary" id="saveApiKeyBtn">Save API Key</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
