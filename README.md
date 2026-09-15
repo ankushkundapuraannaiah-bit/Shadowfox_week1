@@ -1,7 +1,5 @@
 # 🎓 CogniStudy AI — Intelligent Student Academic Utility Suite
 
-> **Role**: AI Engineer  
-> **Mission**: Build an AI-powered student utility that transforms raw study materials into high-yield, structured learning workflows using LLM APIs, prompt engineering, and defensive software architecture.
 
 [![Python](https://img.shields.io/badge/Python-3.14%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141%2B-009688.svg)](https://fastapi.tiangolo.com/)
